@@ -1,12 +1,19 @@
-import { StatusBar } from 'expo-status-bar';
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { StyleSheet, Text, View } from 'react-native';
 import SearchBar from './components/Searchbar';
+import SearchResults from "./components/Searchresults";
+
+const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <SearchBar />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Search">
+        <Stack.Screen name="Search" component={SearchBar} />
+        <Stack.Screen name="Results" component={SearchResults} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 
