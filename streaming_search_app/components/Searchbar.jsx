@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import { View, Text, TextInput, StyleSheet } from "react-native";
+import { View, Text, TextInput, StyleSheet, KeyboardAvoidingView } from "react-native";
 import SearchButton from "./Searchbutton";
 import SpotifyToken from "./Spotifytoken";
 
 export default function SearchBar( {navigation}) {
     
     const [search, setSearch] = useState("");
+    const [token, setToken] = useState("");
 
     useEffect(() => {
         const fetchToken = async () => {
@@ -16,15 +17,22 @@ export default function SearchBar( {navigation}) {
     }, []);
 
     return(
-        <View style={styles.page}>
+        <KeyboardAvoidingView style={styles.page}>
             <Text style={styles.header}>Search for music</Text>
             <TextInput
+                id="SearchInput"
                 style={styles.searchInput}
                 placeholder="Search for song, album or an artist"
                 onChangeText={setSearch}
                 value={search} />
-            <SearchButton onPress={() => navigation.navigate("Results", { query: search })} />
-        </View>
+            <SearchButton onPress={() => {
+                if (!token) {
+                    alert("Loading...");
+                    return;
+                }
+                navigation.navigate("Results", { query: search, token });
+            }} />
+        </ KeyboardAvoidingView>
     )
 } 
 const styles = StyleSheet.create({

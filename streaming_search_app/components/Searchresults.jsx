@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import { FlatList, StyleSheet, Text, View, Image } from "react-native";
 import SpotifyToken from "./Spotifytoken";
 
-export default function SearchResults( { route } ) {
+export default function SearchResults({ route }) {
 
-    const { query } = route.params;
+    const { query, token } = route.params;
     const [results, setResults] = useState([]);
-    const [token, setToken] = useState("");
+
 
     useEffect(() => {
         const fetchToken = async () => {
@@ -18,21 +18,26 @@ export default function SearchResults( { route } ) {
 
     useEffect(() => {
 
+        if (!token) return;
+        if (!query) return;
+
         const fetchResults = async () => {
             try {
-                const response = await fetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=track,artist,album`, {
+                const response = await fetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=track`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
                 }
-            );
+                );
 
-            if (!response.ok) throw new Error("Error in fetching the data");
+                console.log("Status:", response.status);
 
-            const data = await response.json();
-            setResults(data.tracks?.items || []);
+                if (!response.ok) throw new Error("Error in fetching the data");
+
+                const data = await response.json();
+                setResults(data.tracks?.items || []);
             } catch (err) {
-                console.error(err)
+                console.error("ERROR", err)
             }
         };
 
@@ -41,12 +46,24 @@ export default function SearchResults( { route } ) {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.header}>{query}:</Text>
+            <Text style={styles.header}>Search for:</Text>
+            <Text style={styles.search}>{query}</Text>
             <FlatList
                 data={results}
                 keyExtractor={(item) => item.id}
+                contentContainerStyle={{ paddingBottom: 20 }}
                 renderItem={({ item }) => (
-                    <Text>{item.name} - {item.artists?.[0]?.name}</Text>
+                    <View style={styles.item}>
+
+                        <Image
+                            source={{ uri: item.album.images[0]?.url }}
+                            style={styles.image} 
+                            />
+                        <View style={styles.info}>
+                            <Text style={styles.track}>{item.name}</Text>
+                            <Text style={styles.artist}>{item.artists?.[0]?.name}</Text>
+                        </ View>
+                    </ View>
                 )}
             />
         </View>
@@ -62,7 +79,49 @@ const styles = StyleSheet.create({
         marginTop: 20,
         fontSize: 30,
         fontWeight: "500",
-        color: "steelblue",
-        
+        color: "#1DB954",
+    },
+    search: {
+        marginTop: 10,
+        marginBottom: 20,
+        fontSize: 25,
+        fontWeight: "400",
+        color: "#36454f",
+    },
+    item: {
+        height: 100,
+        width: 350,
+        flexDirection: "row",
+        margin: 5,
+        paddingLeft: 5,
+        backgroundColor: "#1DB954",
+        borderRadius: 10,
+        textAlign: "justify",
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: { width: 1, height: 1 },
+        shadowOpacity: 0.2,
+        shadowRadius: 2,
+        elevation: 5,
+    },
+    info: {
+        marginLeft: 15,
+        maxWidth: "70%",
+    },
+    track: {
+        fontSize: 17,
+        fontWeight: "700",
+        color: "white"
+    },
+    artist: {
+        fontSize: 17,
+        fontWeight: "400",
+        color: "white"
+    }, 
+    image : {
+        width: 80,
+        height: 80,
+        marginLeft: 5,
+        borderRadius: 5,
     }
 })
