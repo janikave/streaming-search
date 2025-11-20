@@ -22,7 +22,8 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         fontSize: 20,
-        fontWeight:"500",
+        fontWeight:"300",
+        fontFamily: "Damascus",
         color: "white",
     }
 })

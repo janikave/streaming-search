@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { FlatList, StyleSheet, Text, View, Image } from "react-native";
+import { FlatList, StyleSheet, Text, View, Image, Alert } from "react-native";
+import { IconButton } from "react-native-paper";
 import SpotifyToken from "./Spotifytoken";
 
 export default function SearchResults({ route }) {
 
-    const { query, token } = route.params;
+    const { query, spotifyToken } = route.params;
     const [results, setResults] = useState([]);
 
 
@@ -18,14 +19,14 @@ export default function SearchResults({ route }) {
 
     useEffect(() => {
 
-        if (!token) return;
+        if (!spotifyToken) return;
         if (!query) return;
 
         const fetchResults = async () => {
             try {
                 const response = await fetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=track`, {
                     headers: {
-                        Authorization: `Bearer ${token}`,
+                        Authorization: `Bearer ${spotifyToken}`,
                     },
                 }
                 );
@@ -42,7 +43,7 @@ export default function SearchResults({ route }) {
         };
 
         fetchResults();
-    }, [token, query]);
+    }, [spotifyToken, query]);
 
     return (
         <View style={styles.container}>
@@ -63,6 +64,13 @@ export default function SearchResults({ route }) {
                             <Text style={styles.track}>{item.name}</Text>
                             <Text style={styles.artist}>{item.artists?.[0]?.name}</Text>
                         </ View>
+                            <IconButton
+                                style={styles.icon}
+                                icon="music"
+                                iconColor="white"
+                                size={45}
+                                onPress={() => Alert.alert("PRESSED")}
+                            />
                     </ View>
                 )}
             />
@@ -74,11 +82,13 @@ const styles = StyleSheet.create({
         flex: 1,
         width: "100%",
         alignItems: "center",
+        
     },
     header: {
         marginTop: 20,
         fontSize: 30,
-        fontWeight: "500",
+        fontWeight: "400",
+        fontFamily: "Damascus",
         color: "#1DB954",
     },
     search: {
@@ -86,17 +96,18 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         fontSize: 25,
         fontWeight: "400",
+        fontFamily: "Damascus",
         color: "#36454f",
     },
     item: {
-        height: 100,
+        height: 120,
         width: 350,
         flexDirection: "row",
         margin: 5,
         paddingLeft: 5,
         backgroundColor: "#1DB954",
         borderRadius: 10,
-        textAlign: "justify",
+        textAlign: "center",
         alignItems: "center",
         shadowColor: "#000",
         shadowOffset: { width: 1, height: 1 },
@@ -106,22 +117,28 @@ const styles = StyleSheet.create({
     },
     info: {
         marginLeft: 15,
-        maxWidth: "70%",
+        maxWidth: "50%",
     },
     track: {
-        fontSize: 17,
-        fontWeight: "700",
-        color: "white"
+        fontSize: 15,
+        fontWeight: "500",
+        fontFamily: "Damascus",
+        color: "white",
     },
     artist: {
-        fontSize: 17,
+        fontSize: 15,
         fontWeight: "400",
+        fontFamily: "Damascus",
         color: "white"
     }, 
     image : {
-        width: 80,
-        height: 80,
+        width: 90,
+        height: 90,
         marginLeft: 5,
         borderRadius: 5,
-    }
+    },
+    icon: {
+        position: "absolute",
+        right: 3,
+    } 
 })
