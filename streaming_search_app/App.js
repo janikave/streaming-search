@@ -3,7 +3,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { StyleSheet, Text, View } from 'react-native';
 import SearchBar from './components/Searchbar';
 import SearchResults from "./components/Searchresults";
-import ScFetch from "./components/Scfetch";
+import DeezerFetch from "./components/Deezerfetch";
 
 const Stack = createNativeStackNavigator();
 
@@ -13,7 +13,7 @@ export default function App() {
       <Stack.Navigator initialRouteName="Search">
         <Stack.Screen name="Search" component={SearchBar} />
         <Stack.Screen name="Results" component={SearchResults} />
-        <Stack.Screen name="SoundCloud Results" component={ScFetch} />
+        <Stack.Screen name="Deezer Results" component={DeezerFetch} />
       </Stack.Navigator>
     </NavigationContainer>
   );

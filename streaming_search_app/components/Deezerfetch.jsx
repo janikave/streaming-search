@@ -1,54 +1,36 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState} from "react";
 import { FlatList, StyleSheet, Text, View, Image, Alert } from "react-native";
 import { IconButton } from "react-native-paper";
-import SpotifyToken from "./Spotifytoken";
 
-export default function SearchResults({ route }) {
+export default function DeezerFetch({ route }) {
 
-    const { query, spotifyToken } = route.params;
+    const { query } = route.params;
     const [results, setResults] = useState([]);
 
-
-    useEffect(() => {
-        const fetchToken = async () => {
-            const tok = await SpotifyToken();
-            setToken(tok)
-        }
-        fetchToken();
-    }, []);
-
     useEffect(() => {
 
-        if (!spotifyToken) return;
         if (!query) return;
 
-        const fetchResults = async () => {
+        const fetchDeezerResults = async (query) => {
             try {
-                const response = await fetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=track`, {
-                    headers: {
-                        Authorization: `Bearer ${spotifyToken}`,
-                    },
-                }
-                );
+                const response = await fetch(`https://api.deezer.com/search?q=track:"${query}"`);
+                if (!response.ok) throw new Error("Error in fetching data");
+                const data = await response.json()
 
-                console.log("Status:", response.status);
-
-                if (!response.ok) throw new Error("Error in fetching the data");
-
-                const data = await response.json();
-                setResults(data.tracks?.items || []);
+                setResults(data.data || []);
             } catch (err) {
-                console.error("ERROR", err)
+                console.error(err)
             }
         };
 
-        fetchResults();
-    }, [spotifyToken, query]);
+        fetchDeezerResults(query);
+    }, [query]);
 
     return (
         <View style={styles.container}>
-            <Text style={styles.header}>Search for:</Text>
+            <Text style={styles.header}>Deezer results for: </Text>
             <Text style={styles.search}>{query}</Text>
+
             <FlatList
                 data={results}
                 keyExtractor={(item) => item.id}
@@ -57,39 +39,40 @@ export default function SearchResults({ route }) {
                     <View style={styles.item}>
 
                         <Image
-                            source={{ uri: item.album.images[0]?.url }}
-                            style={styles.image} 
-                            />
+                            source={{ uri: item.album.cover_medium }}
+                            style={styles.image}
+                        />
                         <View style={styles.info}>
-                            <Text style={styles.track}>{item.name}</Text>
-                            <Text style={styles.artist}>{item.artists?.[0]?.name}</Text>
+                            <Text style={styles.track}>{item.title}</Text>
+                            <Text style={styles.artist}>{item.artist?.name}</Text>
                         </ View>
-                            <IconButton
-                                style={styles.icon}
-                                icon="music"
-                                iconColor="white"
-                                size={45}
-                                onPress={() => Alert.alert("PRESSED")}
-                            />
+                        <IconButton
+                            style={styles.icon}
+                            icon="music"
+                            iconColor="white"
+                            size={45}
+                            onPress={() => Alert.alert("PRESSED")}
+                        />
                     </ View>
                 )}
             />
         </View>
     )
 }
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         width: "100%",
         alignItems: "center",
-        
+
     },
     header: {
         marginTop: 20,
         fontSize: 30,
         fontWeight: "400",
         fontFamily: "Damascus",
-        color: "#1DB954",
+        color: "#a238ff",
     },
     search: {
         marginTop: 20,
@@ -105,13 +88,13 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         margin: 5,
         paddingLeft: 5,
-        backgroundColor: "#1DB954",
+        backgroundColor: "#a238ff",
         borderRadius: 10,
         textAlign: "center",
         alignItems: "center",
         shadowColor: "#000",
         shadowOffset: { width: 1, height: 1 },
-        shadowOpacity: 0.2,
+        shadowOpacity: 0.6,
         shadowRadius: 2,
         elevation: 5,
     },
@@ -130,8 +113,8 @@ const styles = StyleSheet.create({
         fontWeight: "400",
         fontFamily: "Damascus",
         color: "white"
-    }, 
-    image : {
+    },
+    image: {
         width: 90,
         height: 90,
         marginLeft: 5,
@@ -140,5 +123,5 @@ const styles = StyleSheet.create({
     icon: {
         position: "absolute",
         right: 3,
-    } 
+    }
 })

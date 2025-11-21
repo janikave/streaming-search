@@ -1,19 +1,16 @@
 import { useEffect, useState } from "react";
-import { View, Text, TextInput, StyleSheet, KeyboardAvoidingView, Image, Platform } from "react-native";
+import { View, Text, TextInput, StyleSheet, Image, KeyboardAvoidingView, Platform } from "react-native";
 import { Checkbox } from "react-native-paper";
 import SearchButton from "./Searchbutton";
 import SpotifyToken from "./Spotifytoken";
-import ScToken from "./Sctoken";
 
 export default function SearchBar({ navigation }) {
 
     const [search, setSearch] = useState("");
 
     const [spotifyToken, setSpotifyToken] = useState("");
-    const [scToken, setScToken] = useState("");
 
     const [spotifyCheck, setSpotifyCheck] = useState(true);
-    const [scCheck, setScCheck] = useState(true);
     const [deezerCheck, setDeezerCheck] = useState(true);
 
 
@@ -24,15 +21,6 @@ export default function SearchBar({ navigation }) {
         };
         fetchSpotifyToken();
     }, []);
-
-    useEffect(() => {
-        const fetchScToken = async () => {
-            const tok = await ScToken();
-            setScToken(tok);
-        };
-        fetchScToken();
-    }, []);
-
 
     return (
         <KeyboardAvoidingView
@@ -52,17 +40,6 @@ export default function SearchBar({ navigation }) {
                         setSpotifyCheck(!spotifyCheck)
                     }}
                 />
-                <Image 
-                    style={styles.logos}
-                    source={{ uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Antu_soundcloud.svg/1200px-Antu_soundcloud.svg.png' }}
-                    />
-                <Checkbox
-                    color="#36454f"
-                    style={styles.checkbox}
-                    status={scCheck ? 'checked' : 'unchecked'}
-                    onPress={() => {
-                        setScCheck(!scCheck)
-                    }} />
                 <Image 
                     style={styles.logos}
                     source={require('../assets/deezerlogo.png')}
@@ -87,9 +64,9 @@ export default function SearchBar({ navigation }) {
                     alert("Loading...");
                     return;
                 }
-                navigation.navigate("Results", { query: search, spotifyToken });
+                navigation.navigate("Deezer Results", { query: search, spotifyToken });
             }} />
-        </ KeyboardAvoidingView>
+        </KeyboardAvoidingView>
     )
 }
 const styles = StyleSheet.create({
