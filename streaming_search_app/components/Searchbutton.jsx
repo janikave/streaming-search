@@ -1,4 +1,4 @@
-import { Text, Alert, StyleSheet, TouchableOpacity, View } from "react-native"
+import { Text, StyleSheet, TouchableOpacity, View } from "react-native"
 
 export default function SearchButton({ onPress }) {
 
@@ -19,6 +19,11 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 10,
         backgroundColor: '#36454f',
+        shadowColor: "#000",
+        shadowOffset: { width: 1, height: 1 },
+        shadowOpacity: 0.3,
+        shadowRadius: 2,
+        elevation: 5,
     },
     buttonText: {
         fontSize: 20,

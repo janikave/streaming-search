@@ -1,8 +1,8 @@
-import { useEffect, useState} from "react";
-import { FlatList, StyleSheet, Text, View, Image, Alert } from "react-native";
+import { useEffect, useState } from "react";
+import { FlatList, StyleSheet, Text, View, Image, Alert, Linking } from "react-native";
 import { IconButton } from "react-native-paper";
 
-export default function DeezerFetch({ route }) {
+export default function FetchDeezer({ route }) {
 
     const { query } = route.params;
     const [results, setResults] = useState([]);
@@ -28,8 +28,11 @@ export default function DeezerFetch({ route }) {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.header}>Deezer results for: </Text>
-            <Text style={styles.search}>{query}</Text>
+
+            <View style={styles.searchinfo}>
+                <Text style={styles.header}>Searching </Text>
+                <Text style={styles.search}>"{query}"</Text>
+            </View>
 
             <FlatList
                 data={results}
@@ -51,7 +54,16 @@ export default function DeezerFetch({ route }) {
                             icon="music"
                             iconColor="white"
                             size={45}
-                            onPress={() => Alert.alert("PRESSED")}
+                            onPress={() => {
+                                const deezerUrl = item.link;
+                                
+                                if (deezerUrl) {
+                                    Linking.openURL(deezerUrl);
+                                } else {
+                                    Alert.alert("Link not available.");
+                                }
+
+                            }}
                         />
                     </ View>
                 )}
@@ -67,27 +79,32 @@ const styles = StyleSheet.create({
         alignItems: "center",
 
     },
+    searchinfo: {
+        flexDirection: "row",
+        alignItems: "center",
+        marginTop: 30,
+        marginBottom: 30,
+    },
     header: {
-        marginTop: 20,
+        width: "50%",
         fontSize: 30,
         fontWeight: "400",
         fontFamily: "Damascus",
-        color: "#a238ff",
+        color: "#36454f",
+        textAlign: "center",
     },
     search: {
-        marginTop: 20,
-        marginBottom: 30,
+        width: "50%",
         fontSize: 25,
         fontWeight: "400",
         fontFamily: "Damascus",
         color: "#36454f",
     },
     item: {
-        height: 120,
+        height: 100,
         width: 350,
         flexDirection: "row",
         margin: 5,
-        paddingLeft: 5,
         backgroundColor: "#a238ff",
         borderRadius: 10,
         textAlign: "center",
@@ -115,10 +132,10 @@ const styles = StyleSheet.create({
         color: "white"
     },
     image: {
-        width: 90,
-        height: 90,
-        marginLeft: 5,
-        borderRadius: 5,
+        width: 100,
+        height: 100,
+        borderTopLeftRadius: 10,
+        borderBottomLeftRadius: 10,
     },
     icon: {
         position: "absolute",

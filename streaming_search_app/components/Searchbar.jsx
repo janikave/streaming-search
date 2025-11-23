@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { View, Text, TextInput, StyleSheet, Image, KeyboardAvoidingView, Platform } from "react-native";
+import { View, Text, TextInput, StyleSheet, Image, KeyboardAvoidingView, Platform, Alert } from "react-native";
 import { Checkbox } from "react-native-paper";
 import SearchButton from "./Searchbutton";
 import SpotifyToken from "./Spotifytoken";
@@ -28,10 +28,10 @@ export default function SearchBar({ navigation }) {
             style={styles.page}>
             <Text style={styles.header}>Search for music</Text>
             <View style={styles.choices}>
-                <Image 
+                <Image
                     style={styles.logos}
                     source={{ uri: 'https://storage.googleapis.com/pr-newsroom-wp/1/2023/05/Spotify_Primary_Logo_RGB_Green.png' }}
-                    />
+                />
                 <Checkbox
                     color="#36454f"
                     style={styles.checkbox}
@@ -40,10 +40,10 @@ export default function SearchBar({ navigation }) {
                         setSpotifyCheck(!spotifyCheck)
                     }}
                 />
-                <Image 
+                <Image
                     style={styles.logos}
                     source={require('../assets/deezerlogo.png')}
-                    />
+                />
                 <Checkbox
                     color="#36454f"
                     style={styles.checkbox}
@@ -64,7 +64,16 @@ export default function SearchBar({ navigation }) {
                     alert("Loading...");
                     return;
                 }
-                navigation.navigate("Deezer Results", { query: search, spotifyToken });
+
+                if (!spotifyCheck && !deezerCheck) {
+                    alert("Pick at least one streaming service.");
+                } else if (spotifyCheck && !deezerCheck) {
+                    navigation.navigate("Spotify Results", { query: search, spotifyToken, spotifyCheck });
+                } else if (!spotifyCheck && deezerCheck) {
+                    navigation.navigate("Deezer Results", { query: search, deezerCheck })
+                } else {
+                    navigation.navigate("Results", { query: search, spotifyToken, spotifyCheck, deezerCheck });
+                }
             }} />
         </KeyboardAvoidingView>
     )

@@ -1,144 +1,23 @@
-import { useEffect, useState } from "react";
-import { FlatList, StyleSheet, Text, View, Image, Alert } from "react-native";
-import { IconButton } from "react-native-paper";
-import SpotifyToken from "./Spotifytoken";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+
+import FetchSpotify from "./Fetchspotify";
+import FetchDeezer from "./Fetchdeezer";
 
 export default function SearchResults({ route }) {
 
-    const { query, spotifyToken } = route.params;
-    const [results, setResults] = useState([]);
-
-
-    useEffect(() => {
-        const fetchToken = async () => {
-            const tok = await SpotifyToken();
-            setToken(tok)
-        }
-        fetchToken();
-    }, []);
-
-    useEffect(() => {
-
-        if (!spotifyToken) return;
-        if (!query) return;
-
-        const fetchResults = async () => {
-            try {
-                const response = await fetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=track`, {
-                    headers: {
-                        Authorization: `Bearer ${spotifyToken}`,
-                    },
-                }
-                );
-
-                console.log("Status:", response.status);
-
-                if (!response.ok) throw new Error("Error in fetching the data");
-
-                const data = await response.json();
-                setResults(data.tracks?.items || []);
-            } catch (err) {
-                console.error("ERROR", err)
-            }
-        };
-
-        fetchResults();
-    }, [spotifyToken, query]);
+    const { query, spotifyCheck, deezerCheck, spotifyToken } = route.params;
+    const Tab = createBottomTabNavigator();
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.header}>Search for:</Text>
-            <Text style={styles.search}>{query}</Text>
-            <FlatList
-                data={results}
-                keyExtractor={(item) => item.id}
-                contentContainerStyle={{ paddingBottom: 20 }}
-                renderItem={({ item }) => (
-                    <View style={styles.item}>
-
-                        <Image
-                            source={{ uri: item.album.images[0]?.url }}
-                            style={styles.image} 
-                            />
-                        <View style={styles.info}>
-                            <Text style={styles.track}>{item.name}</Text>
-                            <Text style={styles.artist}>{item.artists?.[0]?.name}</Text>
-                        </ View>
-                            <IconButton
-                                style={styles.icon}
-                                icon="music"
-                                iconColor="white"
-                                size={45}
-                                onPress={() => Alert.alert("PRESSED")}
-                            />
-                    </ View>
-                )}
-            />
-        </View>
-    )
+        <Tab.Navigator
+            screenOptions={{ headerShown: false }}
+            >
+            {spotifyCheck && (
+                <Tab.Screen name="Spotify" component={FetchSpotify} initialParams={{ query: query, spotifyToken: spotifyToken}} />
+            )}
+            {deezerCheck && (
+                <Tab.Screen name="Deezer" component={FetchDeezer} initialParams={{ query: query }} />
+            )}
+        </Tab.Navigator>
+    );
 }
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        width: "100%",
-        alignItems: "center",
-        
-    },
-    header: {
-        marginTop: 20,
-        fontSize: 30,
-        fontWeight: "400",
-        fontFamily: "Damascus",
-        color: "#1DB954",
-    },
-    search: {
-        marginTop: 20,
-        marginBottom: 30,
-        fontSize: 25,
-        fontWeight: "400",
-        fontFamily: "Damascus",
-        color: "#36454f",
-    },
-    item: {
-        height: 120,
-        width: 350,
-        flexDirection: "row",
-        margin: 5,
-        paddingLeft: 5,
-        backgroundColor: "#1DB954",
-        borderRadius: 10,
-        textAlign: "center",
-        alignItems: "center",
-        shadowColor: "#000",
-        shadowOffset: { width: 1, height: 1 },
-        shadowOpacity: 0.2,
-        shadowRadius: 2,
-        elevation: 5,
-    },
-    info: {
-        marginLeft: 15,
-        maxWidth: "50%",
-    },
-    track: {
-        fontSize: 15,
-        fontWeight: "500",
-        fontFamily: "Damascus",
-        color: "white",
-    },
-    artist: {
-        fontSize: 15,
-        fontWeight: "400",
-        fontFamily: "Damascus",
-        color: "white"
-    }, 
-    image : {
-        width: 90,
-        height: 90,
-        marginLeft: 5,
-        borderRadius: 5,
-    },
-    icon: {
-        position: "absolute",
-        right: 3,
-    } 
-})
