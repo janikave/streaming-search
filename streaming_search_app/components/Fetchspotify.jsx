@@ -37,10 +37,8 @@ export default function FetchSpotify({ route }) {
 
     return (
         <View style={styles.container}>
-            <View style={styles.searchinfo}>
-                <Text style={styles.header}>Search for</Text>
+                <Text style={styles.header}>Results for</Text>
                 <Text style={styles.search}>"{query}"</Text>
-            </View>
             <FlatList
                 data={results}
                 keyExtractor={(item) => item.id}
@@ -55,7 +53,7 @@ export default function FetchSpotify({ route }) {
                         <View style={styles.info}>
                             <Text style={styles.track}>{item.name}</Text>
                             <Text style={styles.artist}>{item.artists?.[0]?.name}</Text>
-                        </ View>
+                        </View>
                         <IconButton
                             style={styles.icon}
                             icon="music"
@@ -82,29 +80,33 @@ const styles = StyleSheet.create({
         flex: 1,
         width: "100%",
         alignItems: "center",
+        backgroundColor: "#36454f"
 
     },
-    searchinfo: {
-        flexDirection: "row",
-        alignItems: "center",
-        marginTop: 30,
-        marginBottom: 30,
-    },
     header: {
-        width: "50%",
+        width: "100%",
         fontSize: 30,
         fontWeight: "400",
         fontFamily: "Damascus",
-        color: "#36454f",
+        color: "white",
         textAlign: "center",
+        alignItems: "center",
+        backgroundColor: "#242F36",
+        paddingTop: 30,
+        paddingBottom: 10,
     },
     search: {
-        width: "50%",
+        width: "90%",
         fontSize: 25,
         fontWeight: "400",
         fontFamily: "Damascus",
-        color: "#36454f",
-        textAlign: "left",
+        color: "white",
+        textAlign: "center",
+        marginBottom: 10,
+        paddingTop: 30,
+        paddingBottom: 10,
+        borderBottomWidth: 1,
+        borderBottomColor: "#8CA2B0",
     },
     item: {
         height: 100,
@@ -115,9 +117,9 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         textAlign: "center",
         alignItems: "center",
-        shadowColor: "#000",
+        shadowColor: "#36454f",
         shadowOffset: { width: 1, height: 1 },
-        shadowOpacity: 0.5,
+        shadowOpacity: 0.2,
         shadowRadius: 2,
         elevation: 5,
     },
@@ -126,7 +128,7 @@ const styles = StyleSheet.create({
         maxWidth: "50%",
     },
     track: {
-        fontSize: 15,
+        fontSize: 14,
         fontWeight: "500",
         fontFamily: "Damascus",
         color: "white",

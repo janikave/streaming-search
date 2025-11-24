@@ -1,4 +1,4 @@
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { StyleSheet, Text, View } from 'react-native';
 import SearchBar from './components/Searchbar';
@@ -8,9 +8,17 @@ import FetchDeezer from "./components/Fetchdeezer";
 
 const Stack = createNativeStackNavigator();
 
+const stackTheme = {
+  ...DefaultTheme, 
+    colors: {
+      ...DefaultTheme.colors,
+        backgroundColor: "black",
+    },
+};
+
 export default function App() {
   return (
-    <NavigationContainer>
+    <NavigationContainer> 
       <Stack.Navigator initialRouteName="Search">
         <Stack.Screen name="Search" component={SearchBar} />
         <Stack.Screen name="Results" component={SearchResults} />
@@ -24,7 +32,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#36454f',
     alignItems: 'center',
     justifyContent: 'center',
   },

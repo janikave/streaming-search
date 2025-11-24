@@ -33,7 +33,7 @@ export default function SearchBar({ navigation }) {
                     source={{ uri: 'https://storage.googleapis.com/pr-newsroom-wp/1/2023/05/Spotify_Primary_Logo_RGB_Green.png' }}
                 />
                 <Checkbox
-                    color="#36454f"
+                    color="white"
                     style={styles.checkbox}
                     status={spotifyCheck ? 'checked' : 'unchecked'}
                     onPress={() => {
@@ -45,7 +45,7 @@ export default function SearchBar({ navigation }) {
                     source={require('../assets/deezerlogo.png')}
                 />
                 <Checkbox
-                    color="#36454f"
+                    color="white"
                     style={styles.checkbox}
                     status={deezerCheck ? 'checked' : 'unchecked'}
                     onPress={() => {
@@ -84,13 +84,13 @@ const styles = StyleSheet.create({
         width: "100%",
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: "#f5f5f5",
+        backgroundColor: "#36454f",
     },
     header: {
         fontSize: 35,
         fontFamily: "Damascus",
         marginBottom: 40,
-        color: '#36454f'
+        color: '#F2F3F4'
     },
     searchInput: {
         height: 50,

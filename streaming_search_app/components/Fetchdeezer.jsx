@@ -29,10 +29,8 @@ export default function FetchDeezer({ route }) {
     return (
         <View style={styles.container}>
 
-            <View style={styles.searchinfo}>
-                <Text style={styles.header}>Searching </Text>
+                <Text style={styles.header}>Results for </Text>
                 <Text style={styles.search}>"{query}"</Text>
-            </View>
 
             <FlatList
                 data={results}
@@ -77,28 +75,32 @@ const styles = StyleSheet.create({
         flex: 1,
         width: "100%",
         alignItems: "center",
-
-    },
-    searchinfo: {
-        flexDirection: "row",
-        alignItems: "center",
-        marginTop: 30,
-        marginBottom: 30,
+        backgroundColor: "#36454f",
     },
     header: {
-        width: "50%",
+        width: "100%",
         fontSize: 30,
         fontWeight: "400",
         fontFamily: "Damascus",
-        color: "#36454f",
+        color: "white",
         textAlign: "center",
+        alignItems: "center",
+        backgroundColor: "#242F36",
+        paddingTop: 30,
+        paddingBottom: 10,
     },
     search: {
-        width: "50%",
+        width: "90%",
         fontSize: 25,
         fontWeight: "400",
         fontFamily: "Damascus",
-        color: "#36454f",
+        color: "white",
+        textAlign: "center",
+        marginBottom: 10,
+        paddingTop: 30,
+        paddingBottom: 10,
+        borderBottomWidth: 1,
+        borderBottomColor: "#8CA2B0",
     },
     item: {
         height: 100,
@@ -114,13 +116,14 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.6,
         shadowRadius: 2,
         elevation: 5,
+        overflow: "scroll",
     },
     info: {
         marginLeft: 15,
         maxWidth: "50%",
     },
     track: {
-        fontSize: 15,
+        fontSize: 14,
         fontWeight: "500",
         fontFamily: "Damascus",
         color: "white",
@@ -129,7 +132,7 @@ const styles = StyleSheet.create({
         fontSize: 15,
         fontWeight: "400",
         fontFamily: "Damascus",
-        color: "white"
+        color: "white",
     },
     image: {
         width: 100,

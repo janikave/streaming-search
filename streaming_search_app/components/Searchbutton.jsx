@@ -16,19 +16,14 @@ const styles = StyleSheet.create({
         width: 150,
         alignItems: "center",
         justifyContent: "center",
-        borderWidth: 1,
         borderRadius: 10,
-        backgroundColor: '#36454f',
-        shadowColor: "#000",
-        shadowOffset: { width: 1, height: 1 },
-        shadowOpacity: 0.3,
-        shadowRadius: 2,
-        elevation: 5,
+        backgroundColor: "#E6EDf5",
     },
     buttonText: {
         fontSize: 20,
         fontWeight:"300",
         fontFamily: "Damascus",
-        color: "white",
+        color: "#242F36",
+
     }
 })
