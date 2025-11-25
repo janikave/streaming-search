@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { View, Text, TextInput, StyleSheet, Image, KeyboardAvoidingView, Platform, Alert } from "react-native";
+import { View, Text, TextInput, StyleSheet, Image, KeyboardAvoidingView, Platform, ActivityIndicator } from "react-native";
 import { Checkbox } from "react-native-paper";
 import SearchButton from "./Searchbutton";
 import SpotifyToken from "./Spotifytoken";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function SearchBar({ navigation }) {
 
@@ -21,6 +22,22 @@ export default function SearchBar({ navigation }) {
         };
         fetchSpotifyToken();
     }, []);
+
+    const saveSearch = async (query) => {
+
+        if (!query.trim()) return;
+
+        try {
+            const oldSearchHistory = JSON.parse(await AsyncStorage.getItem('history')) || [];
+
+            const filterSearchHistory = oldSearchHistory.filter(item => item !== query);
+
+            const newSearchHistory = [query, ...filterSearchHistory.slice(0, 10)]; 
+            await AsyncStorage.setItem('history', JSON.stringify(newSearchHistory));
+        } catch (err) {
+            console.error("Error in saving item: ", err)
+        }
+    }
 
     return (
         <KeyboardAvoidingView
@@ -59,11 +76,14 @@ export default function SearchBar({ navigation }) {
                 placeholder="Search for song, album or an artist"
                 onChangeText={setSearch}
                 value={search} />
-            <SearchButton onPress={() => {
+            <SearchButton onPress={ async () => {
                 if (!spotifyToken) {
                     alert("Loading...");
                     return;
                 }
+
+                await saveSearch(search);
+                console.log(await AsyncStorage.getItem('history'))
 
                 if (!spotifyCheck && !deezerCheck) {
                     alert("Pick at least one streaming service.");
@@ -74,6 +94,7 @@ export default function SearchBar({ navigation }) {
                 } else {
                     navigation.navigate("Results", { query: search, spotifyToken, spotifyCheck, deezerCheck });
                 }
+
             }} />
         </KeyboardAvoidingView>
     )
@@ -88,7 +109,7 @@ const styles = StyleSheet.create({
     },
     header: {
         fontSize: 35,
-        fontFamily: "Damascus",
+        fontFamily: "Avenir-Oblique",
         marginBottom: 40,
         color: '#F2F3F4'
     },

@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
     buttonText: {
         fontSize: 20,
         fontWeight:"300",
-        fontFamily: "Damascus",
+        fontFamily: "Avenir-Oblique",
         color: "#242F36",
 
     }
