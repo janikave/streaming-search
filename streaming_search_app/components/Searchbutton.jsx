@@ -3,8 +3,8 @@ import { Text, StyleSheet, TouchableOpacity, View } from "react-native"
 export default function SearchButton({ onPress }) {
 
     return (
-        <View>
-            <TouchableOpacity style={styles.button} onPress={onPress}>
+        <View>  
+            <TouchableOpacity style={styles.button} onPress={onPress}> 
                 <Text style={styles.buttonText}>Search</Text>
             </TouchableOpacity>
         </View>

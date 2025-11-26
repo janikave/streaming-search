@@ -1,16 +1,17 @@
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { useCallback, useEffect, useState } from "react";
 import { useFocusEffect } from "@react-navigation/native";
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import { Alert, FlatList, StyleSheet, Text, View } from "react-native";
 import { IconButton } from "react-native-paper";
 import SpotifyToken from "./Spotifytoken";
+import DeleteButton from "./Deletebutton";
 
 export default function SearchHistory({ navigation }) {
 
-    const [history, setHistory] = useState([]);
-    const [spotifyToken, setSpotifyToken] = useState("");
+    const [history, setHistory] = useState([]); // Variable for results of search history in a list
+    const [spotifyToken, setSpotifyToken] = useState(""); // Variable for setting token, needed for a search if user wants to check the results again
 
-
+    // Fetching Spotify token
     useEffect(() => {
         const fetchSpotifyToken = async () => {
             const tok = await SpotifyToken();
@@ -19,11 +20,13 @@ export default function SearchHistory({ navigation }) {
         fetchSpotifyToken();
     }, []);
 
+    // Getting history from Async Storage and parsing it on a list
     const getHistory = async () => {
         const searchHistoryData = await AsyncStorage.getItem("history");
         return searchHistoryData ? JSON.parse(searchHistoryData) : [];
     }
 
+    // Hook for setting history on a variable and fetching it
     useFocusEffect(
         useCallback(() => {
             const fetchHistory = async () => {
@@ -34,12 +37,24 @@ export default function SearchHistory({ navigation }) {
         }, [])
     );
 
+    // Variable for deleting full search history
+    const deleteHistory = async () => {
+        try {
+            await AsyncStorage.removeItem("history"),
+                setHistory([]);
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
     return (
         <View style={styles.container}>
             <Text style={styles.header}>Former searches</Text>
 
+            {/*Returning the list of searches user has made*/}
+            {/*Text to return if search history is empty*/}
             {history.length === 0 ? (
-                <Text style={styles.noResults}>No searches found.</Text>
+                <Text style={styles.noResults}>No searches found. </Text>
             ) : (
                 <FlatList
                     data={history}
@@ -47,12 +62,13 @@ export default function SearchHistory({ navigation }) {
                     renderItem={({ item }) => (
                         <View style={styles.item}>
                             <Text style={styles.search}>"{item}"</Text>
+                            {/*Clickable icon for performing the search again*/}
                             <IconButton
                                 style={styles.icon}
                                 icon="chevron-right"
                                 iconColor="white"
                                 size={35}
-                                onPress={() => {
+                                onPress={() => { // Navigating with parameters needed for performing the search again
                                     navigation.navigate("Results", {
                                         query: item,
                                         spotifyCheck: true,
@@ -62,6 +78,19 @@ export default function SearchHistory({ navigation }) {
                                 }}
                             />
                         </View>
+                    )}
+                />
+            )}
+            {history.length > 0 && (
+                <DeleteButton onPress={() =>
+                    Alert.alert(
+                        "Clearing history", "This deletes all searches. Press Yes if you want to continue.",
+                        [
+                            { text: "Cancel", style: "cancel" },
+                            { text: "Yes", onPress: deleteHistory }
+                        ]
+
+
                     )}
                 />
             )}
@@ -84,7 +113,6 @@ const styles = StyleSheet.create({
     noResults: {
         fontFamily: "Avenir-Heavy",
         fontSize: 35,
-        backgroundColor: "#36454f",
         color: "white",
         margin: "auto",
     },
@@ -108,6 +136,6 @@ const styles = StyleSheet.create({
     icon: {
         position: "absolute",
         right: 5,
-    }
+    },
 
 })

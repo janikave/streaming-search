@@ -4,14 +4,15 @@ import { IconButton } from "react-native-paper";
 
 export default function FetchDeezer({ route }) {
 
-    const { query } = route.params;
-    const [results, setResults] = useState([]);
+    const { query } = route.params; // Getting query for executing the fetch from Deezer API
+    const [results, setResults] = useState([]); // Variable for setting results in a list
 
     useEffect(() => {
 
         if (!query) return;
 
-        const fetchDeezerResults = async (query) => {
+        // Fetching the data from Deezer API
+        const fetchDeezerResults = async () => {
             try {
                 const response = await fetch(`https://api.deezer.com/search?q=track:"${query}"`);
                 if (!response.ok) throw new Error("Error in fetching data");
@@ -32,6 +33,7 @@ export default function FetchDeezer({ route }) {
                 <Text style={styles.header}>Results for </Text>
                 <Text style={styles.search}>"{query}"</Text>
 
+            {/* List for search results */}
             <FlatList
                 data={results}
                 keyExtractor={(item) => item.id}
@@ -46,7 +48,8 @@ export default function FetchDeezer({ route }) {
                         <View style={styles.info}>
                             <Text style={styles.track}>{item.title}</Text>
                             <Text style={styles.artist}>{item.artist?.name}</Text>
-                        </ View>
+                        </View>
+                        {/* Clickable icon for the track's link to the streaming service */}
                         <IconButton
                             style={styles.icon}
                             icon="music"
@@ -63,7 +66,7 @@ export default function FetchDeezer({ route }) {
 
                             }}
                         />
-                    </ View>
+                    </View>
                 )}
             />
         </View>

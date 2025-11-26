@@ -7,14 +7,16 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function SearchBar({ navigation }) {
 
-    const [search, setSearch] = useState("");
 
-    const [spotifyToken, setSpotifyToken] = useState("");
+    const [search, setSearch] = useState(""); // Variable for setting input for search
 
+    const [spotifyToken, setSpotifyToken] = useState(""); // Variable for setting token for Spotify API usage
+
+    // Setting up checkboxes for both streaming services
     const [spotifyCheck, setSpotifyCheck] = useState(true);
     const [deezerCheck, setDeezerCheck] = useState(true);
 
-
+    // Hook for fetching Spotify token
     useEffect(() => {
         const fetchSpotifyToken = async () => {
             const tok = await SpotifyToken();
@@ -23,9 +25,10 @@ export default function SearchBar({ navigation }) {
         fetchSpotifyToken();
     }, []);
 
+    // Saving search querys for search history component
     const saveSearch = async (query) => {
 
-        if (!query.trim()) return;
+        if (!query.trim()) return; // Ensuring that empty search won't get saved on search history
 
         try {
             const oldSearchHistory = JSON.parse(await AsyncStorage.getItem('history')) || [];
@@ -82,17 +85,18 @@ export default function SearchBar({ navigation }) {
                     return;
                 }
 
-                await saveSearch(search);
+                await saveSearch(search); // Saving search to search history
                 console.log(await AsyncStorage.getItem('history'))
 
+                // Navigation for results depending on checkboxes chosen
                 if (!spotifyCheck && !deezerCheck) {
-                    alert("Pick at least one streaming service.");
+                    alert("Pick at least one streaming service."); // Stopping search without any checkboxes checked
                 } else if (spotifyCheck && !deezerCheck) {
                     navigation.navigate("Spotify Results", { query: search, spotifyToken, spotifyCheck });
                 } else if (!spotifyCheck && deezerCheck) {
                     navigation.navigate("Deezer Results", { query: search, deezerCheck })
                 } else {
-                    navigation.navigate("Results", { query: search, spotifyToken, spotifyCheck, deezerCheck });
+                    navigation.navigate("Results", { query: search, spotifyToken, spotifyCheck, deezerCheck }); // Showing results from both services
                 }
 
             }} />

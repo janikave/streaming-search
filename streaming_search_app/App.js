@@ -1,4 +1,4 @@
-import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
+import { NavigationContainer, DefaultTheme, DarkTheme } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { StyleSheet, Text, View } from 'react-native';
 import SearchBar from './components/Searchbar';
@@ -7,10 +7,10 @@ import FetchSpotify from "./components/Fetchspotify";
 import FetchDeezer from "./components/Fetchdeezer";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import SearchHistory from "./components/Searchhistory";
-
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
+// Creating bottom tabs for homepage
 function IndexTabs() {
   return (
     <Tab.Navigator screenOptions={{ headerShown: false }}>
@@ -21,6 +21,7 @@ function IndexTabs() {
 }
 
 export default function App() {
+
   return (
     <NavigationContainer style={styles.container}> 
       <Stack.Navigator initialRouteName="Home">
@@ -43,3 +44,4 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+

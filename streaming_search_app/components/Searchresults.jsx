@@ -1,5 +1,4 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { BlurView } from "expo-blur";
 
 import FetchSpotify from "./Fetchspotify";
 import FetchDeezer from "./Fetchdeezer";
@@ -7,8 +6,8 @@ import { Easing } from "react-native";
 
 export default function SearchResults({ route }) {
 
-    const { query, spotifyCheck, deezerCheck, spotifyToken } = route.params;
-    const Tab = createBottomTabNavigator();
+    const { query, spotifyCheck, deezerCheck, spotifyToken } = route.params; // Variable for getting parameters needed for both results screens
+    const Tab = createBottomTabNavigator(); // Creating bottom tab for navigating between to views of results
 
     return (
         <Tab.Navigator
