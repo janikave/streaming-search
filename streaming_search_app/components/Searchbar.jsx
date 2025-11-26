@@ -35,7 +35,7 @@ export default function SearchBar({ navigation }) {
 
             const filterSearchHistory = oldSearchHistory.filter(item => item !== query);
 
-            const newSearchHistory = [query, ...filterSearchHistory.slice(0, 10)]; 
+            const newSearchHistory = [query, ...filterSearchHistory.slice(0, 10)];
             await AsyncStorage.setItem('history', JSON.stringify(newSearchHistory));
         } catch (err) {
             console.error("Error in saving item: ", err)
@@ -79,11 +79,13 @@ export default function SearchBar({ navigation }) {
                 placeholder="Search for song, album or an artist"
                 onChangeText={setSearch}
                 value={search} />
-            <SearchButton onPress={ async () => {
+            <SearchButton onPress={async () => {
                 if (!spotifyToken) {
                     alert("Loading...");
                     return;
                 }
+
+                setLoading(true);
 
                 await saveSearch(search); // Saving search to search history
                 console.log(await AsyncStorage.getItem('history'))

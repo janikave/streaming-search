@@ -1,6 +1,6 @@
 import { TouchableOpacity, View, Text, StyleSheet } from "react-native";
 
-export default function DeleteButton( {onPress} ) {
+export default function DeleteButton({ onPress }) {
 
     return (
         <View style={styles.view}>
@@ -11,7 +11,7 @@ export default function DeleteButton( {onPress} ) {
     )
 }
 const styles = StyleSheet.create({
-    view : {
+    view: {
         width: "100%",
         alignItems: "center",
         marginTop: 5,

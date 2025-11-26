@@ -48,11 +48,11 @@ export default function FetchSpotify({ route }) {
             <Text style={styles.header}>Results for</Text>
             <Text style={styles.search}>"{query}"</Text>
 
-            { loading && (
+            {loading && (
                 <View style={styles.loading}>
                     <ActivityIndicator size="large" color="white" />
                 </View>
-            ) }
+            )}
 
 
             {/* List for search results */}

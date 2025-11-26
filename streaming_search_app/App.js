@@ -23,7 +23,7 @@ function IndexTabs() {
 export default function App() {
 
   return (
-    <NavigationContainer style={styles.container}> 
+    <NavigationContainer style={styles.container}>
       <Stack.Navigator initialRouteName="Home">
 
         <Stack.Screen name="Home" component={IndexTabs} options={{ headerShown: false }} />

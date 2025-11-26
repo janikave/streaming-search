@@ -39,7 +39,7 @@ export default function FetchDeezer({ route }) {
             <Text style={styles.header}>Results for </Text>
             <Text style={styles.search}>"{query}"</Text>
 
-            { loading && (
+            {loading && (
                 <View style={styles.loading}>
                     <ActivityIndicator size="large" color="white" />
                 </View>
@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
         position: "absolute",
         right: 2,
     },
-    loading : {
+    loading: {
         ...StyleSheet.absoluteFillObject,
         justifyContent: "center",
         alignItems: "center",

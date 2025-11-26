@@ -11,25 +11,26 @@ export default function SearchResults({ route }) {
 
     return (
         <Tab.Navigator
-            screenOptions={{ 
+            screenOptions={{
                 headerShown: false,
-                animation: "shift" }}
-            >
+                animation: "shift"
+            }}
+        >
             {spotifyCheck && (
                 <Tab.Screen
-                    name="Spotify" 
-                    component={FetchSpotify} 
-                    initialParams={{ query: query, spotifyToken: spotifyToken}}
-                    options={{ tabBarActiveTintColor: "#1DB954", transitionSpec: {animation: 'timing', config: {duration: 300, easing: Easing.inOut(Easing.ease),},}, }}
-                    />
+                    name="Spotify"
+                    component={FetchSpotify}
+                    initialParams={{ query: query, spotifyToken: spotifyToken }}
+                    options={{ tabBarActiveTintColor: "#1DB954", transitionSpec: { animation: 'timing', config: { duration: 300, easing: Easing.inOut(Easing.ease), }, }, }}
+                />
             )}
             {deezerCheck && (
-                <Tab.Screen 
-                    name="Deezer" 
-                    component={FetchDeezer} 
+                <Tab.Screen
+                    name="Deezer"
+                    component={FetchDeezer}
                     initialParams={{ query: query }}
-                    options={{ tabBarActiveTintColor: "#a238ff", transitionSpec: {animation: 'timing', config: {duration: 300, easing: Easing.inOut(Easing.ease),},}, }}
-                    />
+                    options={{ tabBarActiveTintColor: "#a238ff", transitionSpec: { animation: 'timing', config: { duration: 300, easing: Easing.inOut(Easing.ease), }, }, }}
+                />
             )}
         </Tab.Navigator>
     );
