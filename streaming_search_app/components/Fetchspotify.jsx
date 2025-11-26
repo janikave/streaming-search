@@ -1,12 +1,14 @@
+import { load } from "js-yaml";
 import { useEffect, useState } from "react";
-import { FlatList, StyleSheet, Text, View, Image, Alert, ScrollView, Linking } from "react-native";
-import { IconButton } from "react-native-paper";
+import { FlatList, StyleSheet, Text, View, Image, Alert, Linking } from "react-native";
+import { IconButton, ActivityIndicator } from "react-native-paper";
 
 export default function FetchSpotify({ route }) {
 
 
     const { query, spotifyToken } = route.params; // Getting parameters needed for executing fetch from Spotify API
     const [results, setResults] = useState([]); // Variable for setting results in a list
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
 
@@ -16,6 +18,7 @@ export default function FetchSpotify({ route }) {
 
         // Fetching the data from Spotify API
         const fetchResults = async () => {
+            setLoading(true);
             try {
                 const response = await fetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=track`, {
                     headers: {
@@ -32,6 +35,8 @@ export default function FetchSpotify({ route }) {
                 setResults(data.tracks?.items || []);
             } catch (err) {
                 console.error("ERROR", err)
+            } finally {
+                setLoading(false);
             }
         };
 
@@ -40,33 +45,41 @@ export default function FetchSpotify({ route }) {
 
     return (
         <View style={styles.container}>
-                <Text style={styles.header}>Results for</Text>
-                <Text style={styles.search}>"{query}"</Text>
+            <Text style={styles.header}>Results for</Text>
+            <Text style={styles.search}>"{query}"</Text>
+
+            { loading && (
+                <View style={styles.loading}>
+                    <ActivityIndicator size="large" color="white" />
+                </View>
+            ) }
+
+
             {/* List for search results */}
             <FlatList
                 data={results}
                 keyExtractor={(item) => item.id}
                 contentContainerStyle={{ paddingBottom: 20 }}
                 renderItem={({ item }) => (
-                    
-                    <View style={styles.item}> 
+
+                    <View style={styles.item}>
                         <Image
                             source={{ uri: item.album.images[0]?.url }}
                             style={styles.image}
-                        /> 
+                        />
                         <View style={styles.info}>
                             <Text style={styles.track}>{item.name}</Text>
                             <Text style={styles.artist}>{item.artists?.[0]?.name}</Text>
                         </View>
                         {/* Clickable icon for the track's link to the streaming service */}
-                        <IconButton 
+                        <IconButton
                             style={styles.icon}
                             icon="music"
                             iconColor="white"
                             size={45}
                             onPress={() => {
                                 const spotifyUrl = item.external_urls?.spotify;
-                                
+
                                 if (spotifyUrl) {
                                     Linking.openURL(spotifyUrl).catch(err => console.error("Unable to open the URL:", err));
                                 } else {
@@ -151,5 +164,12 @@ const styles = StyleSheet.create({
     icon: {
         position: "absolute",
         right: 2,
+    },
+    loading: {
+        ...StyleSheet.absoluteFillObject,
+        backgroundColor: "#36454f",
+        justifyContent: "center",
+        alignItems: "center",
+        zIndex: 10,
     }
 })

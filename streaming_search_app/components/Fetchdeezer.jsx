@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { FlatList, StyleSheet, Text, View, Image, Alert, Linking } from "react-native";
-import { IconButton } from "react-native-paper";
+import { IconButton, ActivityIndicator } from "react-native-paper";
 
 export default function FetchDeezer({ route }) {
 
     const { query } = route.params; // Getting query for executing the fetch from Deezer API
     const [results, setResults] = useState([]); // Variable for setting results in a list
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
 
@@ -13,6 +14,9 @@ export default function FetchDeezer({ route }) {
 
         // Fetching the data from Deezer API
         const fetchDeezerResults = async () => {
+
+            setLoading(true);
+
             try {
                 const response = await fetch(`https://api.deezer.com/search?q=track:"${query}"`);
                 if (!response.ok) throw new Error("Error in fetching data");
@@ -21,6 +25,8 @@ export default function FetchDeezer({ route }) {
                 setResults(data.data || []);
             } catch (err) {
                 console.error(err)
+            } finally {
+                setLoading(false);
             }
         };
 
@@ -30,8 +36,14 @@ export default function FetchDeezer({ route }) {
     return (
         <View style={styles.container}>
 
-                <Text style={styles.header}>Results for </Text>
-                <Text style={styles.search}>"{query}"</Text>
+            <Text style={styles.header}>Results for </Text>
+            <Text style={styles.search}>"{query}"</Text>
+
+            { loading && (
+                <View style={styles.loading}>
+                    <ActivityIndicator size="large" color="white" />
+                </View>
+            )}
 
             {/* List for search results */}
             <FlatList
@@ -57,7 +69,7 @@ export default function FetchDeezer({ route }) {
                             size={45}
                             onPress={() => {
                                 const deezerUrl = item.link;
-                                
+
                                 if (deezerUrl) {
                                     Linking.openURL(deezerUrl);
                                 } else {
@@ -143,5 +155,11 @@ const styles = StyleSheet.create({
     icon: {
         position: "absolute",
         right: 2,
+    },
+    loading : {
+        ...StyleSheet.absoluteFillObject,
+        justifyContent: "center",
+        alignItems: "center",
+        zIndex: 10,
     }
 })
