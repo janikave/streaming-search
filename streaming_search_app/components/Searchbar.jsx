@@ -90,6 +90,11 @@ export default function SearchBar({ navigation }) {
                     return;
                 }
 
+                
+                if (search.length == 0) {
+                    alert("Please put something in the search");
+                    return;
+                }
 
                 // Alert for missing Spotify token
                 if (spotifyCheck && !spotifyToken) {

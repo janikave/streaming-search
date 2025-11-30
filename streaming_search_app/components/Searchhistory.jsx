@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
     },
     search: {
         fontFamily: "Avenir-Oblique",
-        fontSize: "20",
+        fontSize: 20,
         color: "white",
     },
     icon: {
