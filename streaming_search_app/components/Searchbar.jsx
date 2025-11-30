@@ -80,12 +80,6 @@ export default function SearchBar({ navigation }) {
                 onChangeText={setSearch}
                 value={search} />
             <SearchButton onPress={async () => {
-                if (!spotifyToken) {
-                    alert("Loading...");
-                    return;
-                }
-
-                setLoading(true);
 
                 await saveSearch(search); // Saving search to search history
                 console.log(await AsyncStorage.getItem('history'))
@@ -93,13 +87,25 @@ export default function SearchBar({ navigation }) {
                 // Navigation for results depending on checkboxes chosen
                 if (!spotifyCheck && !deezerCheck) {
                     alert("Pick at least one streaming service."); // Stopping search without any checkboxes checked
-                } else if (spotifyCheck && !deezerCheck) {
+                    return;
+                }
+
+
+                // Alert for missing Spotify token
+                if (spotifyCheck && !spotifyToken) {
+                    alert("Search failure: Unable to search without token");
+                    return;
+                }
+
+                // Setting conditions on navigating to different results
+                if (spotifyCheck && !deezerCheck) {
                     navigation.navigate("Spotify Results", { query: search, spotifyToken, spotifyCheck });
                 } else if (!spotifyCheck && deezerCheck) {
                     navigation.navigate("Deezer Results", { query: search, deezerCheck })
                 } else {
                     navigation.navigate("Results", { query: search, spotifyToken, spotifyCheck, deezerCheck }); // Showing results from both services
                 }
+
 
             }} />
         </KeyboardAvoidingView>
