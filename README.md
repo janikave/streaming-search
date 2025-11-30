@@ -33,6 +33,6 @@ With these steps, the search functionality should work on Spotify as well.
 ### Next steps after setting up Spotify API
 
 1. Install npm: ```npm install```
-2. Install Expo: ´´´npx expo```
+2. Install Expo: ```npx expo```
 3. Install Expo Go on your phone, it will work as a platform for the app.
 4. Start the app with ```npx expo start``` and scan the QR-code with your mobilephone.
